@@ -1,0 +1,17 @@
+{
+    "name": "Wasta-erp",
+    "short_name": "wasta",
+    "start_url": "/",
+    "background_color": "#6777ef",
+    "description": "Tutorial of Laravel Package",
+    "display": "fullscreen",
+    "theme_color": "#6777ef",
+    "icons": [
+        {
+            "src": "logo.PNG",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

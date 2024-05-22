@@ -1,0 +1,118 @@
+tbody {
+    text-align: right;
+}
+
+.pull-left,
+.float-left {
+    float: right !important;
+}
+
+.pull-right,
+.float-right {
+    float: left !important;
+}
+
+.side-navbar {
+    right: 0;
+    text-align: right;
+}
+
+.right-sidebar {
+    right: auto;
+    left: 0;
+    text-align: right;
+}
+
+nav.navbar .nav-item a i {
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.mCS-dir-rtl > .mCSB_inside > .mCSB_container {
+    margin-left: 10px;
+}
+
+.page {
+    margin-left: 0;
+    width: calc(100% - 230px);
+    float: left;
+}
+
+
+.side-navbar li a[data-toggle="collapse"]::before {
+    content: '\f105';
+    left: 0;
+    right: auto;
+}
+
+.filter-toggle {
+    float: left;
+}
+
+.dt-buttons {
+    text-align: left;
+}
+
+.dt-buttons.btn-group > .btn {
+    float: none !important;
+}
+
+.input-group > .input-group-append > .btn {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.dataTables_length {
+    text-align: right;
+}
+
+.modal-header .close {
+    padding: 0;
+    margin: 0;
+}
+
+.dataTables_info,
+.dataTables_paginate {
+    float: right;
+    text-align: right;
+}
+
+ul.pagination {
+    display: block;
+}
+
+ul.pagination li {
+    float: left;
+}
+
+.dataTable .dropdown-menu {
+    left: 0;
+    right: auto;
+    text-align: right;
+}
+
+.dropdown-menu.edit-options li .btn-link {
+    text-align: right;
+}
+
+.modal-body {
+    text-align: right;
+}
+
+.card-body {
+    text-align: right;
+}
+
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+    text-align: right;
+}
+
+.bootstrap-select > .dropdown-toggle {
+    padding-left: 25px;
+}
+
+.table-fixed tbody td, .table-fixed thead > tr > th {
+    float: right;
+}

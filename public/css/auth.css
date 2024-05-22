@@ -1,0 +1,306 @@
+.login-page .logo span,
+.register-page .logo span {
+    color: #7c5cc4;
+}
+
+.login-page a.forgot-pass,
+.login-page a.signup,
+.register-page a.forgot-pass,
+.register-page a.signup {
+    font-size: 0.8em;
+    color: #7c5cc4;
+}
+
+.login-page,
+.register-page {
+    background: #f5f5f5;
+    background-image: url('../images/auth/auth-light.jpg');
+    background-size:cover;
+	width: 100%;
+	min-height: auto;
+	padding-bottom: 0;
+	margin-left: 0
+}
+
+.dark-mode .login-page,
+.dark-mode .register-page {
+    background: #f5f5f5;
+    background-image: url('../images/auth/auth-dark.jpg');
+    background-size:cover;
+	width: 100%;
+	min-height: auto;
+	padding-bottom: 0;
+	margin-left: 0
+}
+
+.login-page .form-outer,
+.register-page .form-outer {
+	min-height: 100vh;
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px 0;
+	position: relative
+}
+
+.login-page .copyrights,
+.register-page .copyrights {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 100%
+}
+
+.login-page .copyrights p,
+.register-page .copyrights p {
+	font-size: .6em;
+	font-weight: 300;
+	margin-bottom: 10px
+}
+
+.login-page .form-inner,
+.register-page .form-inner {
+	border-radius: 5px;
+	padding: 40px 30px;
+	background: #FFF;
+	box-shadow: 0 0 35px rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+	width: 100%
+}
+
+.dark-mode .login-page .form-inner,
+.dark-mode .register-page .form-inner {
+	border-radius: 5px;
+	padding: 40px 30px;
+	background: #283046;
+	box-shadow: 0 0 35px rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+	width: 100%
+}
+
+.login-page .logo,
+.register-page .logo {
+	font-size: 2em;
+	font-weight: 500
+}
+
+.login-page p,
+.register-page p {
+	font-size: .8em;
+	font-weight: 300;
+	color: #aaa;
+	margin-bottom: 0
+}
+
+.login-page form,
+.register-page form {
+	margin: 2rem auto 1rem;
+	max-width: 300px
+}
+
+.login-page a.forgot-pass:focus,
+.login-page a.forgot-pass:hover,
+.login-page a.signup:focus,
+.login-page a.signup:hover,
+.register-page a.forgot-pass:focus,
+.register-page a.forgot-pass:hover,
+.register-page a.signup:focus,
+.register-page a.signup:hover {
+	color: #66b0ff;
+	text-decoration: none
+}
+
+.login-page a.forgot-pass,
+.register-page a.forgot-pass {
+	display: block
+}
+
+.login-page a.create-account,
+.register-page a.create-account {
+	border-radius: 50px;
+	font-size: .75em;
+	margin-top: 10px;
+	color: #999;
+	text-transform: uppercase
+}
+
+.login-page .terms-conditions,
+.register-page .terms-conditions {
+	margin-top: 20px
+}
+
+.login-page small,
+.register-page small {
+	font-size: .65em;
+	color: #aaa;
+	line-height: .9em
+}
+
+@media (min-width:768px) {
+	.login-page p,
+	.register-page p {
+		font-size: .9em
+	}
+	.login-page form label.label-custom,
+	.register-page form label.label-custom {
+		font-size: .9em
+	}
+	.login-page form small,
+	.register-page form small {
+		font-size: .8em
+	}
+	.login-page .terms-conditions label,
+	.register-page .terms-conditions label {
+		font-size: .9em
+	}
+	.login-page a.forgot-pass,
+	.login-page a.signup,
+	.register-page a.forgot-pass,
+	.register-page a.signup {
+		font-size: .8em
+	}
+	.login-page small,
+	.register-page small {
+		font-size: .8em
+	}
+	.login-page .copyrights p,
+	.register-page .copyrights p {
+		font-size: .85em;
+		font-weight: 400
+	}
+}
+
+
+.form-group-material {
+	position: relative;
+	margin-bottom: 30px
+}
+
+input.input-material {
+	width: 100%;
+	border: none;
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+	color: #868e96;
+	font-weight: 300
+}
+
+.dark-mode input.input-material {
+    background: #283046
+}
+
+input.input-material~label {
+	color: #aaa;
+	position: absolute;
+	top: 14px;
+	left: 0;
+	cursor: text;
+	-webkit-transition: all .2s;
+	transition: all .2s;
+	font-weight: 300
+}
+
+input.input-material~label.error {
+	color: #dc3545;
+	font-size: .75em;
+	position: absolute;
+	top: auto;
+	bottom: -30px;
+	left: 0
+}
+
+input.input-material:focus {
+    border-color: #7c5cc4;
+    outline: none;
+}
+
+input.input-material~label.active {
+    font-size: 0.8em;
+    top: -10px;
+    color: #7c5cc4;
+}
+
+input.form-control-custom:checked+label::before {
+    background: #7c5cc4 !important;
+}
+
+.btn {
+    font-weight: 400;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    padding: .45rem .75rem;
+    font-size: .9rem;
+    line-height: 1.5;
+    -webkit-transition: background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+}
+
+
+.btn-primary {
+    color: color-yiq(#7c5cc4);
+    background-color: #7c5cc4;
+    border-color: #7c5cc4;
+}
+
+.btn-primary:hover {
+    background-color: #6244a6;
+    border-color: #6244a6;
+}
+
+.btn-success {
+	color: color-yiq(#34cea7);
+	background-color: #34cea7;
+	border-color: #34cea7
+}
+
+.btn-success:hover {
+	color: color-yiq(#34cea7);
+	background-color: #34cea7;
+	border-color: #34cea7
+}
+
+.btn-success.focus,
+.btn-success:focus {
+	-webkit-box-shadow: 0 0 0 .2rem rgba(40, 167, 69, .5);
+	box-shadow: 0 0 0 .2rem rgba(40, 167, 69, .5)
+}
+
+.btn-info {
+	color: color-yiq(#17a2b8);
+	background-color: #17a2b8;
+	border-color: #17a2b8
+}
+
+.btn-info:hover {
+	color: color-yiq(#138496);
+	background-color: #138496;
+	border-color: #117a8b
+}
+
+.btn-info.focus,
+.btn-info:focus {
+	-webkit-box-shadow: 0 0 0 .2rem rgba(23, 162, 184, .5);
+	box-shadow: 0 0 0 .2rem rgba(23, 162, 184, .5)
+}
+
+.btn-dark {
+	color: color-yiq(#343a40);
+	background-color: #343a40;
+	border-color: #343a40
+}
+
+.btn-dark:hover {
+	color: color-yiq(#23272b);
+	background-color: #23272b;
+	border-color: #1d2124
+}
+
+.btn-dark.focus,
+.btn-dark:focus {
+	-webkit-box-shadow: 0 0 0 .2rem rgba(52, 58, 64, .5);
+	box-shadow: 0 0 0 .2rem rgba(52, 58, 64, .5)
+}

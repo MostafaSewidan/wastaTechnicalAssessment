@@ -1,0 +1,7 @@
+invoice_no,customer_email,customer_name,customer_phone,city,state,address,product_name,product_variant,product_price,product_code,sku,quantity,discount,total_order_cod,products_count,shipping_cost
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,14 ahmed samir,kami,xl/green,100,12345678,12,350,12%,500,6,20
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,15 ahmed samir,kami,xl/green,100,793479834,13,350,12%,500,6,20
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,16 ahmed samir,kami,xl/green,100,2352345432,14,350,12%,500,6,20
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,17 ahmed samir,kami,xl/green,100,2345423,15,350,12%,500,6,20
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,18 ahmed samir,kami,xl/green,100,435265212,16,350,12%,500,6,20
+72881728,ahmed.haroun993@gmail.com,ahmedharoun,1501608292,cairo,shobra,19 ahmed samir,kami,xl/green,100,12345678,12,350,12%,500,6,20

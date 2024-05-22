@@ -1,0 +1,21 @@
+Field that need to add in job-sheet-form 
+
+-> Aggrement Pary -> Text Field
+-> CONSIGNEE -> Text Field 
+-> Change Line label to Carrier 
+-> Vessel -> Text Field 
+-> Vessel(ETD) -> Text Field 
+-> Slot -> Text Field 
+-> Payment -> Text Field 
+-> Slot Rate -> Text Field (Only Integer)
+-> Way -> Dropdown option(Through, Non-Through, Direct)
+
+Routing မှာ 
+POT1 ကို tick လုပ် ရင် field ပေါ်မယ် အဲ့ဒီ field က + sign လေးနဲ့ ထည့် ပြီးတော့ ၂ ခု လုပ် လို့ ရမယ် 
+POT2 နှင့် POT3 လည်း အဲ့လိုပဲ tick လုပ် ရင် tick လုပ်တယ့် box နဲ့ ဆိုင်တယ့် field တွေပေါ်မယ် 
+
+->Def ကို Detention လို့ပြောင်းပေးပါ 
+-> Agent change to POL/POD Agent
+-> Revome the field of Executive /OOG/ODO
+-> Export / Import Change From Text Field to Dropdown Menu
+

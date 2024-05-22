@@ -1,0 +1,13 @@
+{
+    "name": "Woocommerce",
+    "alias": "woocommerce",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Woocommerce\\Providers\\WoocommerceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
