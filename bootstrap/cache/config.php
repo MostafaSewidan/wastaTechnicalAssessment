@@ -3,7 +3,7 @@
   array (
     'name' => 'salepropos',
     'env' => 'live',
-    'debug' => false,
+    'debug' => true,
     'url' => 'http://localhost',
     'asset_url' => NULL,
     'timezone' => 'Africa/Cairo',
