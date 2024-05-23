@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     @if(!config('database.connections.saleprosaas_landlord'))
+    {{-- {{dd($general_setting->site_logo)}} --}}
     <link rel="icon" type="image/png" href="{{url('logo', $general_setting->site_logo)}}" />
     <title>{{$general_setting->site_title}}</title>
     <meta name="description" content="">
@@ -113,6 +114,19 @@
     @endif
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <style>
+      span.select2-container .selection {
+        width: 100%;
+      }
+      .bootstrap-select.dropdown-menu {
+        z-index: 11000;
+      }
+      span.select2-container {
+        width: auto;
+        display: block;
+      }
+    </style>
+
     <!-- Google fonts - Roboto -->
     <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito:400,500,700" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link href="https://fonts.googleapis.com/css?family=Nunito:400,500,700" rel="stylesheet"></noscript>
@@ -136,20 +150,34 @@
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'notifications.store', 'method' => 'post']) !!}
                       <div class="row">
+
+                        {{-- ============= Old code ================ --}}
                           <?php
-                              $lims_user_list = DB::table('users')->where([
-                                ['is_active', true],
-                                ['id', '!=', \Auth::user()->id]
-                              ])->get();
+                              // $lims_user_list = DB::table('users')->where([
+                              //   ['is_active', true],
+                              //   ['id', '!=', \Auth::user()->id]
+                              // ])->get();
                           ?>
-                          <div class="col-md-6 form-group">
+                          {{-- <div class="col-md-6 form-group">
                               <label>{{trans('file.User')}} *</label>
                               <select name="user_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select user...">
                                   @foreach($lims_user_list as $user)
                                   <option value="{{$user->id}}">{{$user->name . ' (' . $user->email. ')'}}</option>
                                   @endforeach
                               </select>
+                          </div> --}}
+                        {{-- ============= solve code ================ --}}
+                          <div class="col-md-6 form-group">
+                            <label>{{trans('file.User')}} *</label>
+                            <select 
+                              name="user_id" 
+                              class="form-control live-search" 
+                              data-url="{{route("sale.get.users.except.auth")}}" 
+                              required  
+                              title="Select user...">
+                            </select>
                           </div>
+                          {{-- ====================================== --}}
                           <div class="col-md-12 form-group">
                               <label>{{trans('file.Message')}} *</label>
                               <textarea rows="5" name="message" class="form-control" required></textarea>
@@ -218,7 +246,6 @@
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'expenses.store', 'method' => 'post']) !!}
                     <?php
-                      $lims_expense_category_list = DB::table('expense_categories')->where('is_active', true)->get();
                       if(Auth::user()->role_id > 2)
                         $lims_warehouse_list = DB::table('warehouses')->where([
                           ['is_active', true],
@@ -232,12 +259,15 @@
                       <div class="row">
                         <div class="col-md-6 form-group">
                             <label>{{trans('file.Expense Category')}} *</label>
-                            <select name="expense_category_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Expense Category...">
-                                @foreach($lims_expense_category_list as $expense_category)
-                                <option value="{{$expense_category->id}}">{{$expense_category->name . ' (' . $expense_category->code. ')'}}</option>
-                                @endforeach
-                            </select>
+
+                          <select 
+                            name="expense_category_id" 
+                            class="form-control live-search" 
+                            data-url="{{route("sale.expense.categories")}}" 
+                            required
+                            title="Select Expense Category..."></select>
                         </div>
+
                         <div class="col-md-6 form-group">
                             <label>{{trans('file.Warehouse')}} *</label>
                             <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
@@ -378,18 +408,30 @@
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'report.user', 'method' => 'post']) !!}
+                    
+                    
+                        {{-- ============= Old code ================ --}}
                     <?php
-                      $lims_user_list = DB::table('users')->where('is_active', true)->get();
+                      // $lims_user_list = DB::table('users')->where('is_active', true)->get();
                     ?>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                           <label>{{trans('file.User')}} *</label>
                           <select name="user_id" class="selectpicker form-control" required data-live-search="true" id="user-id" data-live-search-style="begins" title="Select user...">
                               @foreach($lims_user_list as $user)
                               <option value="{{$user->id}}">{{$user->name . ' (' . $user->phone. ')'}}</option>
                               @endforeach
                           </select>
-                      </div>
+                      </div> --}}
 
+                      {{-- ============= solve code ================ --}}
+
+                      <div class="form-group">
+                        <label>{{trans('file.User')}} *</label>
+
+                        <select name="user_id" class="form-control live-search" data-url="{{route("sale.get.users")}}" id="user-id" required  title="Select user...">
+                        </select>
+                      </div>
+                      {{-- ====================================== --}}
                       <input type="hidden" name="start_date" value="{{date('Y-m').'-'.'01'}}" />
                       <input type="hidden" name="end_date" value="{{date('Y-m-d')}}" />
 
@@ -414,18 +456,30 @@
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'report.customer', 'method' => 'post']) !!}
+                    
+                    {{-- ============= Old code ================ --}}
                     <?php
-                      $lims_customer_list = DB::table('customers')->where('is_active', true)->get();
+                      // $lims_customer_list = DB::table('customers')->where('is_active', true)->get();
                     ?>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                           <label>{{trans('file.customer')}} *</label>
                           <select name="customer_id" class="selectpicker form-control" required data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                               @foreach($lims_customer_list as $customer)
                               <option value="{{$customer->id}}">{{$customer->name . ' (' . $customer->phone_number. ')'}}</option>
                               @endforeach
                           </select>
-                      </div>
+                      </div> --}}
 
+                      {{-- ============= solve code ================ --}}
+
+                      <div class="form-group">
+                        <label>{{trans('file.customer')}} *</label>
+
+                        <select name="customer_id" class="form-control live-search" data-url="{{route("sale.get.customers")}}" required id="customer-id" title="Select customer...">
+                            
+                        </select>
+                      </div>
+                      {{-- ====================================== --}}
                       <input type="hidden" name="start_date" value="{{date('Y-m').'-'.'01'}}" />
                       <input type="hidden" name="end_date" value="{{date('Y-m-d')}}" />
 
@@ -567,6 +621,10 @@
     <script type="text/javascript" src="<?php echo asset('../../vendor/datatable/dataTables.bootstrap4.min.js') ?>"></script>
     @endif
 
+    {{-- live search with select2 scripts --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript" src="{{asset('js/select-live-search.js')}}"></script>
+    
     @stack('scripts')
     <script>
         if ('serviceWorker' in navigator ) {
@@ -594,7 +652,7 @@
           }
 
           $("div.alert").delay(3000).slideUp(750);
-          $('select').selectpicker({
+          $('.selectpicker').selectpicker({
               style: 'btn-link',
           });
 

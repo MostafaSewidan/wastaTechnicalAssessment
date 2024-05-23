@@ -64,6 +64,7 @@ use Salla\ZATCA\Tags\InvoiceTotalAmount;
 use Salla\ZATCA\Tags\Seller;
 use Salla\ZATCA\Tags\TaxNumber;
 use Carbon\Carbon;
+use App\Http\Resources\Selectors\{UserResource, CustomerResource, StateResource,ExpenseCategories};
 
 class SaleController extends Controller
 {
@@ -1662,11 +1663,11 @@ class SaleController extends Controller
     {
         $role = Role::find(Auth::user()->role_id);
         if($role->hasPermissionTo('sales-add')) {
-            $permissions = Role::findByName($role->name)->permissions;
-            foreach ($permissions as $permission)
-                $all_permission[] = $permission->name;
-            if(empty($all_permission))
-                $all_permission[] = 'dummy text';
+            // $permissions = Role::findByName($role->name)->permissions;
+            // foreach ($permissions as $permission)
+            //     $all_permission[] = $permission->name;
+            // if(empty($all_permission))
+            //     $all_permission[] = 'dummy text';
 
             $lims_customer_group_all = Cache::remember('customer_group_list', 60*60*24, function () {
                 return CustomerGroup::where('is_active', true)->get();
@@ -1730,18 +1731,43 @@ class SaleController extends Controller
             });
             //return $lims_category_list;
             if(Auth::user()->role_id > 2 && config('staff_access') == 'own') {
-                $recent_sale = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where([
+
+                // ***************** old code *****************
+                // $recent_sale = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where([
+                //     ['sale_status', 1],
+                //     ['user_id', Auth::id()]
+                // ])->orderBy('id', 'desc')->take(10)->get();
+
+                // $recent_draft = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where([
+                //     ['sale_status', 3],
+                //     ['user_id', Auth::id()]
+                // ])->orderBy('id', 'desc')->take(10)->get();
+
+                // ***************** solve code *****************
+                $recent_sale = Sale::with(['customer'])->select('id','reference_no','customer_id','grand_total','created_at')->where([
                     ['sale_status', 1],
                     ['user_id', Auth::id()]
                 ])->orderBy('id', 'desc')->take(10)->get();
-                $recent_draft = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where([
+
+                $recent_draft = Sale::with(['customer'])->select('id','reference_no','customer_id','grand_total','created_at')->where([
                     ['sale_status', 3],
                     ['user_id', Auth::id()]
                 ])->orderBy('id', 'desc')->take(10)->get();
+                // ***************** end solving *****************
             }
             else {
-                $recent_sale = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 1)->orderBy('id', 'desc')->take(10)->get();
-                $recent_draft = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 3)->orderBy('id', 'desc')->take(10)->get();
+
+                // ***************** old code *****************
+
+                // $recent_sale = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 1)->orderBy('id', 'desc')->take(10)->get();
+                // $recent_draft = Sale::select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 3)->orderBy('id', 'desc')->take(10)->get();
+
+                // ***************** solve code *****************
+
+                $recent_sale = Sale::with(['customer'])->select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 1)->orderBy('id', 'desc')->take(10)->get();
+                $recent_draft = Sale::with(['customer'])->select('id','reference_no','customer_id','grand_total','created_at')->where('sale_status', 3)->orderBy('id', 'desc')->take(10)->get();
+                
+                // ***************** end solving *****************
             }
             $lims_coupon_list = Cache::remember('coupon_list', 60*60*24*30, function () {
                 return Coupon::where('is_active',true)->get();
@@ -1749,9 +1775,32 @@ class SaleController extends Controller
             $flag = 0;
 
             $currency_list = Currency::where('is_active', true)->get();
-            $numberOfInvoice = Sale::count();
+
+            // useless query
+            // $numberOfInvoice = Sale::count();
             $custom_fields = CustomField::where('belongs_to', 'sale')->get();
-            return view('backend.sale.pos', compact('currency_list','role','all_permission', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_reward_point_setting_data', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'options', 'lims_brand_list', 'lims_category_list', 'lims_table_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'numberOfInvoice', 'custom_fields'));
+            return view('backend.sale.pos', compact('currency_list',
+                'role',
+                // 'all_permission',
+                'lims_customer_group_all',
+                'lims_warehouse_list',
+                'lims_reward_point_setting_data',
+                'lims_product_list',
+                'product_number',
+                'lims_tax_list',
+                'lims_biller_list',
+                'lims_pos_setting_data',
+                'options',
+                'lims_brand_list',
+                'lims_category_list',
+                'lims_table_list',
+                'recent_sale',
+                'recent_draft',
+                'lims_coupon_list',
+                'flag',
+                // 'numberOfInvoice',
+                'custom_fields'
+            ));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
@@ -4321,5 +4370,67 @@ return 'Sales With Reference Numbers '.$sales.' Was Set To '.$text.' Successfull
         $this->fileDelete('documents/sale/', $lims_sale_data->document);
 
         return Redirect::to($url)->with('not_permitted', $message);
+    }
+
+
+
+    public function getUsersExceptAuth(Request $request){
+        $users = User::
+            where('is_active',true)
+            ->where('id',"!=",auth()->user()->id)
+            ->where(function($query) use($request){
+            if($request->has("search")){
+                $query->where('name',"LIKE","%{$request->search}%");
+                $query->orWhere('email',"LIKE","%{$request->search}%");
+            }
+        })->paginate(($request->limit ?? 10));
+        return UserResource::collection($users);
+    }
+
+    public function getUsers(Request $request){
+        $users = User::
+            where('is_active',true)
+            ->where(function($query) use($request){
+            if($request->has("search")){
+                $query->where('name',"LIKE","%{$request->search}%");
+                $query->orWhere('email',"LIKE","%{$request->search}%");
+            }
+        })->paginate(($request->limit ?? 10));
+        
+        return UserResource::collection($users);
+    }
+
+    public function getCustomers(Request $request){
+        $customers = Customer::
+            where('is_active',true)
+            ->where(function($query) use($request){
+            if($request->has("search")){
+                $query->where('name',"LIKE","%{$request->search}%");
+                $query->orWhere('phone_number',"LIKE","%{$request->search}%");
+            }
+        })->paginate(($request->limit ?? 10));
+        return CustomerResource::collection($customers);
+    }
+
+    public function getPlaces(Request $request){
+        $states = DB::table('places')
+            ->where(function($query) use($request){
+            if($request->has("search")){
+                $query->where('state',"LIKE","%{$request->search}%");
+            }
+        })->groupby('state')->paginate(($request->limit ?? 10));
+        return StateResource::collection($states);
+    }
+
+    public function getexpenseCategories(Request $request){
+        $states = DB::table('expense_categories')
+            ->where('is_active', true)
+            ->where(function($query) use($request){
+            if($request->has("search")){
+                $query->where('name',"LIKE","%{$request->search}%");
+                $query->orWhere('code',"LIKE","%{$request->search}%");
+            }
+        })->paginate(($request->limit ?? 10));
+        return ExpenseCategories::collection($states);
     }
 }

@@ -41,12 +41,6 @@
                                 $keybord_active = $lims_pos_setting_data->keybord_active;
                             else
                                 $keybord_active = 0;
-
-                            $customer_active = DB::table('permissions')
-                              ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-                              ->where([
-                                ['permissions.name', 'customers-add'],
-                                ['role_id', \Auth::user()->role_id] ])->first();
                         @endphp
                         <div class="row">
                             <div class="col-md-12">
@@ -143,7 +137,7 @@
                                             <input type="hidden" name="customer_id_hidden" value="{{$lims_pos_setting_data->customer_id}}">
                                             @endif
                                             <div class="input-group pos customer-input">
-                                                @if($customer_active)
+                                                @if($role->hasPermissionTo("customers-add"))
                                         <select name="customer_id" id="customer_id" class="form-control" style="width: 100%;"></select>
                                     
                                                 <?php
@@ -752,21 +746,8 @@
                               </ul>
                             </div>
                             <li class="nav-item ml-4"><a id="btnFullscreen" data-toggle="tooltip" title="Full Screen"><i class="dripicons-expand"></i></a></li>
-                            <?php
-                                $general_setting_permission = $permission_list->where('name', 'general_setting')->first();
-                                $general_setting_permission_active = DB::table('role_has_permissions')->where([
-                                            ['permission_id', $general_setting_permission->id],
-                                            ['role_id', Auth::user()->role_id]
-                                        ])->first();
-
-                                $pos_setting_permission = $permission_list->where('name', 'pos_setting')->first();
-
-                                $pos_setting_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $pos_setting_permission->id],
-                                    ['role_id', Auth::user()->role_id]
-                                ])->first();
-                            ?>
-                            @if($pos_setting_permission_active)
+                            
+                            @if($role->hasPermissionTo("pos_setting"))
                             <li class="nav-item"><a class="dropdown-item" data-toggle="tooltip" href="{{route('setting.pos')}}" title="{{trans('file.POS Setting')}}"><i class="dripicons-gear"></i></a> </li>
                             @endif
                             <li class="nav-item">
@@ -775,26 +756,13 @@
                             <li class="nav-item">
                                 <a href="" id="register-details-btn" data-toggle="tooltip" title="{{trans('file.Cash Register Details')}}"><i class="dripicons-briefcase"></i></a>
                             </li>
-                            <?php
-                                $today_sale_permission = $permission_list->where('name', 'today_sale')->first();
-                                $today_sale_permission_active = DB::table('role_has_permissions')->where([
-                                            ['permission_id', $today_sale_permission->id],
-                                            ['role_id', Auth::user()->role_id]
-                                        ])->first();
 
-                                $today_profit_permission = $permission_list->where('name', 'today_profit')->first();
-                                $today_profit_permission_active = DB::table('role_has_permissions')->where([
-                                            ['permission_id', $today_profit_permission->id],
-                                            ['role_id', Auth::user()->role_id]
-                                        ])->first();
-                            ?>
-
-                            @if($today_sale_permission_active)
+                            @if($role->hasPermissionTo("today_sale"))
                             <li class="nav-item">
                                 <a href="" id="today-sale-btn" data-toggle="tooltip" title="{{trans('file.Today Sale')}}"><i class="dripicons-shopping-bag"></i></a>
                             </li>
                             @endif
-                            @if($today_profit_permission_active)
+                            @if($role->hasPermissionTo("today_profit"))
                             <li class="nav-item">
                                 <a href="" id="today-profit-btn" data-toggle="tooltip" title="{{trans('file.Today Profit')}}"><i class="dripicons-graph-line"></i></a>
                             </li>
@@ -824,7 +792,7 @@
                                     <li>
                                         <a href="{{route('user.profile', ['id' => Auth::id()])}}"><i class="dripicons-user"></i> {{trans('file.profile')}}</a>
                                     </li>
-                                    @if($general_setting_permission_active)
+                                    @if($role->hasPermissionTo("general_setting"))
                                     <li>
                                         <a href="{{route('setting.general')}}"><i class="dripicons-gear"></i> {{trans('file.settings')}}</a>
                                     </li>
@@ -1038,17 +1006,29 @@
                             <input type="text" name="address_text" required class="form-control">
                         </div>
                             <div class="form-group">
-    <label>{{trans('المحافظه')}} *</label>
-    <select required name="state_text" id="state_text" class="selectpicker form-control" data-live-search="true" title="Select city...">
-        <?php
-        $states = DB::table('places')->groupby('state')->get();
-        ?>
-        @foreach($states as $state)
-        <option value="{{ $state->state }}">{{ $state->state }}</option>
-        
-        @endforeach
-    </select>
-</div>
+                                <label>{{trans('المحافظه')}} *</label>
+                                {{-- ============= Old code ================ --}}
+                                {{-- <select required name="state_text" id="state_text" class="selectpicker form-control" data-live-search="true" title="Select city..."> --}}
+                                    <?php
+                                    // $states = DB::table('places')->groupby('state')->get();
+                                    ?>
+                                    {{-- @foreach($states as $state)
+                                    <option value="{{ $state->state }}">{{ $state->state }}</option>
+                                    
+                                    @endforeach --}}
+                                {{-- </select> --}}
+                                    {{-- ============= solve code ================ --}}
+
+                                <select 
+                                    required 
+                                    name="state_text" 
+                                    id="state_text" 
+                                    data-url="{{route("sale.get.states")}}" 
+                                    class="live-search form-control" 
+                                    title="Select city...">
+                                </select>
+                                {{-- ====================================== --}}
+                            </div>
                         <div class="form-group">
                             <label>{{trans('file.City')}} *</label>
                             
@@ -1086,6 +1066,40 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>{{trans('المحافظه')}} *</label>
+                            {{-- ============= Old code ================ --}}
+                            {{-- <select required name="state" id="state" class="selectpicker form-control" data-live-search="true" title="Select city...">
+                                <?php
+                                // $states = DB::table('places')->groupby('state')->get();
+                                ?>
+                                @foreach($states as $state)
+                                <option value="{{ $state->state }}">{{ $state->state }}</option>
+                                
+                                @endforeach
+                            </select> --}}
+
+                            {{-- ============= solve code ================ --}}
+
+                            <select 
+                                required 
+                                name="state" 
+                                id="state" 
+                                data-url="{{route("sale.get.states")}}" 
+                                class="live-search form-control" 
+                                title="Select city...">
+                            </select>
+                            {{-- ====================================== --}}
+                        </div>
+                        <div class="form-group">
+                            <label>{{trans('file.City')}} *</label>
+                            
+                            <select  name="city" required  class=" selectpicker form-control" id="cities" data-live-search="true">
+                                <option >اختر المحافظة اولا</option>
+                                </select>
+                                
+                               <!-- <input name="city" type="text" class="form-control">-->
+                        </div>
+                        <div class="form-group">
                             <label>{{trans('file.name')}} *</strong> </label>
                             <input type="text" name="customer_name" required class="form-control">
                         </div>
@@ -1102,27 +1116,7 @@
                             <label>{{trans('file.Address')}} *</label>
                             <input type="text" name="address" required class="form-control">
                         </div>
-                            <div class="form-group">
-    <label>{{trans('المحافظه')}} *</label>
-    <select required name="state" id="state" class="selectpicker form-control" data-live-search="true" title="Select city...">
-        <?php
-        $states = DB::table('places')->groupby('state')->get();
-        ?>
-        @foreach($states as $state)
-        <option value="{{ $state->state }}">{{ $state->state }}</option>
-        
-        @endforeach
-    </select>
-</div>
-                        <div class="form-group">
-                            <label>{{trans('file.City')}} *</label>
-                            
-                            <select  name="city" required  class=" selectpicker form-control" id="cities" data-live-search="true">
-                                <option >اختر المحافظة اولا</option>
-                                </select>
-                                
-                               <!-- <input name="city" type="text" class="form-control">-->
-                        </div>
+                        
                         <div class="form-group">
                             <input type="hidden" name="pos" value="1">
                             <button type="button" class="btn btn-primary customer-submit-btn">{{trans('file.submit')}}</button>
@@ -1164,7 +1158,13 @@
                                   </thead>
                                   <tbody>
                                     @foreach($recent_sale as $sale)
-                                    <?php $customer = DB::table('customers')->find($sale->customer_id); ?>
+                                    <?php 
+                                        // ***************** old code *****************
+                                        // $customer = DB::table('customers')->find($sale->customer_id); 
+                                        // ***************** solve code *****************
+                                        $customer = $sale->customer; 
+                                        // ***************** end solving *****************
+                                    ?>
                                     <tr>
                                       <td>{{date('d-m-Y', strtotime($sale->created_at))}}</td>
                                       <td>{{$sale->reference_no}}</td>
@@ -1172,10 +1172,10 @@
                                       <td>{{$sale->grand_total}}</td>
                                       <td>
                                         <div class="btn-group">
-                                            @if(in_array("sales-edit", $all_permission))
+                                            @if($role->hasPermissionTo("sales-edit"))
                                             <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-success btn-sm" title="Edit"><i class="dripicons-document-edit"></i></a>&nbsp;
                                             @endif
-                                            @if(in_array("sales-delete", $all_permission))
+                                            @if($role->hasPermissionTo("sales-delete"))
                                             {{ Form::open(['route' => ['sales.destroy', $sale->id], 'method' => 'DELETE'] ) }}
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()" title="Delete"><i class="dripicons-trash"></i></button>
                                             {{ Form::close() }}
@@ -1202,7 +1202,14 @@
                                   </thead>
                                   <tbody>
                                     @foreach($recent_draft as $draft)
-                                    <?php $customer = DB::table('customers')->find($draft->customer_id); ?>
+
+                                    <?php 
+                                        // ***************** old code *****************
+                                        // $customer = DB::table('customers')->find($draft->customer_id); 
+                                        // ***************** solve code *****************
+                                        $customer = $draft->customer; 
+                                        // ***************** end solving *****************
+                                    ?>
                                     <tr>
                                       <td>{{date('d-m-Y', strtotime($draft->created_at))}}</td>
                                       <td>{{$draft->reference_no}}</td>
@@ -1210,10 +1217,10 @@
                                       <td>{{$draft->grand_total}}</td>
                                       <td>
                                         <div class="btn-group">
-                                            @if(in_array("sales-edit", $all_permission))
+                                            @if($role->hasPermissionTo("sales-edit"))
                                             <a href="{{url('sales/'.$draft->id.'/create') }}" class="btn btn-success btn-sm" title="Edit"><i class="dripicons-document-edit"></i></a>&nbsp;
                                             @endif
-                                            @if(in_array("sales-delete", $all_permission))
+                                            @if($role->hasPermissionTo("sales-delete"))
                                             {{ Form::open(['route' => ['sales.destroy', $draft->id], 'method' => 'DELETE'] ) }}
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()" title="Delete"><i class="dripicons-trash"></i></button>
                                             {{ Form::close() }}
@@ -1815,6 +1822,7 @@ $('.customer-submit-btn').on("click", function() {
             value = response['name']+' ['+response['phone_number']+']';
             $('select[name="customer_id"]').append('<option value="'+ key +'">'+ value +'</option>');
             $('select[name="customer_id"]').val(key);
+            $('#customer').val(response['id']);
             $('.selectpicker').selectpicker('refresh');
             $("#addCustomer").modal('hide');
              updateshipping(key);
@@ -2071,9 +2079,11 @@ else {
 $('.selectpicker').selectpicker('refresh');
 
 var id = $("#customer_id").val();
-$.get('sales/getcustomergroup/' + id, function(data) {
-    customer_group_rate = (data / 100);
-});
+if(id)
+    $.get('sales/getcustomergroup/' + id, function(data) {
+        customer_group_rate = (data / 100);
+    });
+
 
 var id = $("#warehouse_id").val();
 $.get('sales/getproduct/' + id, function(data) {
@@ -2225,8 +2235,8 @@ function populateProduct(data) {
             else
                 tableData += '<td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="images/product/'+image+'" width="100%" /><p>'+data['name'][index]+'</p><span>'+data['code'][index]+'</span></td>';
         });
-
-        if(data['name'].length % 5){
+        
+        if(typeof data['name'] != "undefined" && data['name']?.length % 5){
             var number = 5 - (data['name'].length % 5);
             while(number > 0)
             {

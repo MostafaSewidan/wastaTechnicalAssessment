@@ -41,7 +41,10 @@ $(document).ready(function () {
     }
 
     //Custom select
-    $('select').selectpicker();
+    //you can't use any tool with the html tag name use it with a class name or id name 
+    // because it's conflicting with other blugins like select2
+    // $('select').selectpicker();
+    $('.selectpicker').selectpicker();
 
     $('[data-toggle="tooltip"]').tooltip();
 

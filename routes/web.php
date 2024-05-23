@@ -725,6 +725,18 @@ Route::resource('shipping', ShippingCompanyController::class);
         Route::post('uploadcsv', 'uploadcsv')->name('sale.uploadcsv');
         Route::post('insert_address', 'insert_address')->name('sale.insert_address');
         Route::get('pos', 'posSale')->name('sale.pos');
+
+        //filters select live search
+        Route::prefix('sale/live-search')->name('sale.')->group(function () {
+            
+            Route::get('states', 'getPlaces')->name('get.states');
+            Route::get('customers', 'getCustomers')->name('get.customers');
+            Route::get('users', 'getUsers')->name('get.users');
+            Route::get('users-except-auth', 'getUsersExceptAuth')->name('get.users.except.auth');
+            Route::get('expense-categories', 'getexpenseCategories')->name('expense.categories');
+        });
+        //end filters routes
+
         Route::get('sales/lims_sale_search', 'limsSaleSearch')->name('sale.search');
         Route::get('sales/lims_product_search', 'limsProductSearch')->name('product_sale.search');
         Route::get('sales/getcustomergroup/{id}', 'getCustomerGroup')->name('sale.getcustomergroup');
